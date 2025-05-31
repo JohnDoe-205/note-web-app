@@ -1,58 +1,36 @@
+function add(){
+		var inp = document.getElementById("inp").value;
+		var notesContainer = document.getElementById("notes");
 
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
+//var notes = document.getElementById("notes").innerHTML;
+		if (inp.trim() !== "") {
+			var note = document.createElement("div");
+			note.classList.add("note")
+			var noteText = document.createElement("p");
+			noteText.textContent = inp;
+			var editButton = document.createElement("button")
+			editButton.textContent = "Edit";
+			editButton.classList.add("edit-button");
+			editButton.onclick = function (){
+				var newText = prompt("Edit your note:", noteText.textContent);
+				if (newText !== null && newText.trim() !== "") {
+					noteText.textContent = newText;
+				}
+			};
 
-function saveNotes() {
-	localStorage.setItem("notes", JSON.stringify(notes));
-}
+			var deleteButton = document.createElement("button");
+			deleteButton.textContent = "Delete";
+			deleteButton.classList.add("delete-button");
+			deleteButton.onclick = function(){
+				notesContainer.removeChild(note);
+			};
+			note.appendChild(noteText);
+			note.appendChild(editButton);
+			note.appendChild(deleteButton);
+			notesContainer.appendChild(note);
+			document.getElementById("inp").value = ""
 
-function renderNotes() {
-	const notesContainer = document.getElementById("notes");
-	notesContainer.innerHTML = ""; // Clear existing notes
-	notes.forEach((text, index) => {
-		const note = document.createElement("div");
-		note.classList.add("note");
-
-		const noteText = document.createElement("p");
-		noteText.textContent = text;
-
-		const editButton = document.createElement("button");
-		editButton.textContent = "Edit";
-		editButton.classList.add("edit-button");
-		editButton.onclick = function () {
-			const newText = prompt("Edit your note:", noteText.textContent);
-			if (newText !== null && newText.trim() !== "") {
-				notes[index] = newText;
-				saveNotes();
-				renderNotes();
-			}
-		};
-
-		const deleteButton = document.createElement("button");
-		deleteButton.textContent = "Delete";
-		deleteButton.classList.add("delete-button");
-		deleteButton.onclick = function () {
-			notes.splice(index, 1);
-			saveNotes();
-			renderNotes();
-		};
-
-		note.appendChild(noteText);
-		note.appendChild(editButton);
-		note.appendChild(deleteButton);
-		notesContainer.appendChild(note);
-	});
-}
-
-function add() {
-	const inp = document.getElementById("inp").value;
-	if (inp.trim() !== "") {
-		notes.push(inp);
-		saveNotes();
-		renderNotes();
-		document.getElementById("inp").value = "";
+//	document.getElementById("notes").innerHTML = notes + (notes ? "<br>":"") + inp;
+		}
+//		document.getElementById("inp").value = "";
 	}
-}
-
-// Load notes on page load
-window.onload = renderNotes;
-```
